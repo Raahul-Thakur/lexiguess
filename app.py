@@ -1,20 +1,21 @@
 from flask import Flask, render_template, request, jsonify, session
+import os
 import pathlib
 import random
 from collections import Counter
 
 app = Flask(__name__)
-app.secret_key = "change-me-in-prod"
 
-# Load words (must be 5-letter words for this UI)
+app.secret_key = os.environ.get("SECRET_KEY", "dev-key")
+
 wordlist = pathlib.Path("wordle_words.txt").read_text().splitlines()
 WORDS = [w.strip().upper() for w in wordlist if len(w.strip()) == 5]
-WORD_SET = set(WORDS)  # for quick validation
+WORD_SET = set(WORDS)
 
 
 def new_game():
     session["word"] = random.choice(WORDS)
-    session["guesses"] = []  # each: {"word": "CRANE", "feedback": ["correct","misplaced","wrong",...]}
+    session["guesses"] = []
     session["done"] = False
     session["win"] = False
     session.modified = True
@@ -24,13 +25,11 @@ def new_game():
 def index():
     if "word" not in session or session.get("done"):
         new_game()
-    # We don't send the answer; front-end will query /state for ongoing guesses.
     return render_template("index.html", title="LexiGuess")
 
 
 @app.route("/state", methods=["GET"])
 def state():
-    """Return current guesses so the page can refresh without losing progress."""
     return jsonify({
         "guesses": session.get("guesses", []),
         "win": session.get("win", False),
@@ -40,22 +39,14 @@ def state():
 
 
 def score_guess(guess: str, target: str):
-    """
-    Wordle-like two-pass evaluation (handles duplicates correctly):
-    1) Mark greens (correct position) and reduce counts.
-    2) Mark yellows (present elsewhere if count allows), otherwise gray.
-    Returns a list of "correct"/"misplaced"/"wrong" per letter.
-    """
     res = ["wrong"] * 5
     counts = Counter(target)
 
-    # pass 1: greens
     for i, ch in enumerate(guess):
         if ch == target[i]:
             res[i] = "correct"
             counts[ch] -= 1
 
-    # pass 2: yellows
     for i, ch in enumerate(guess):
         if res[i] == "correct":
             continue

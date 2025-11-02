@@ -1,0 +1,163 @@
+/* ---------- Theme variables ---------- */
+:root {
+    --bg: #121213;
+    --text: #ffffff;
+    --tile-border: #3a3a3c;
+  
+    --key-default: #818384;
+    --key-wrong: #3a3a3c;
+    --key-misplaced: #b59f3b;
+    --key-correct: #538d4e;
+  
+    --tile-wrong: #3a3a3c;
+    --tile-misplaced: #b59f3b;
+    --tile-correct: #6aaa64;
+  
+    --accent: #e6e6e6;
+  }
+  
+  :root.light {
+    --bg: #ffffff;
+    --text: #000000;
+    --tile-border: #d3d6da;
+  
+    --key-default: #d3d6da;
+    --key-wrong: #939598;
+    --key-misplaced: #c9b458;
+    --key-correct: #6aaa64;
+  
+    --tile-wrong: #787c7e;
+    --tile-misplaced: #c9b458;
+    --tile-correct: #6aaa64;
+  
+    --accent: #111;
+  }
+  
+  /* ---------- Base layout ---------- */
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  }
+  
+  /* Header */
+  .topbar {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .title {
+    margin: 0;
+    font-size: 28px;
+    letter-spacing: 1px;
+  }
+  .actions {
+    display: flex;
+    gap: 8px;
+  }
+  button {
+    border: none;
+    border-radius: 8px;
+    padding: 8px 10px;
+    background: var(--key-default);
+    color: #fff;
+    cursor: pointer;
+    font-weight: 700;
+  }
+  button.secondary { background: var(--key-wrong); }
+  
+  /* Centered game area */
+  .center-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .game {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    width: 100%;
+  }
+  
+  /* Board (6 rows x 5 cols) */
+  .board {
+    display: grid;
+    grid-template-rows: repeat(6, 1fr);
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .board-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+  }
+  .tile {
+    width: 62px;
+    height: 62px;
+    border: 2px solid var(--tile-border);
+    display: grid;
+    place-items: center;
+    font-size: 28px;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+  .tile.correct { background: var(--tile-correct); color: #fff; border: none; }
+  .tile.misplaced { background: var(--tile-misplaced); color: #fff; border: none; }
+  .tile.wrong { background: var(--tile-wrong); color: #fff; border: none; }
+  
+  /* Keyboard */
+  .keyboard {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    user-select: none;
+  }
+  .key-row {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+  }
+  .key {
+    min-width: 40px;
+    padding: 12px 10px;
+    background: var(--key-default);
+    color: #fff;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+  }
+  .key.wide { min-width: 64px; }
+  .key.correct { background: var(--key-correct); }
+  .key.misplaced { background: var(--key-misplaced); }
+  .key.wrong { background: var(--key-wrong); }
+  
+  /* Toast message */
+  .toast {
+    position: fixed;
+    top: 74px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(20,20,20,0.9);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease;
+  }
+  :root.light .toast { background: rgba(0,0,0,0.8); }
+  
+  /* Responsive */
+  @media (max-width: 420px) {
+    .tile { width: 50px; height: 50px; font-size: 22px; }
+  }
+  

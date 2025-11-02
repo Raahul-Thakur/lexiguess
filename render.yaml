@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: wordle-flask
+    runtime: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app:app"
+    envVars:
+      FLASK_ENV: production
